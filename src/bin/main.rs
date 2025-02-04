@@ -3,11 +3,11 @@
 
 use esp_backtrace as _;
 use esp_hal::delay::Delay;
-use esp_hal::gpio::{Level, OutputOpenDrain, Pull, Io};
+use esp_hal::gpio::{Level, OutputOpenDrain, Pull};
 use esp_hal::i2c::master::{Config, I2c};
 use esp_hal::prelude::*;
 use lcd_display::lcd16x2::Pcf8574;
-
+use lcd_display::enums::Commands;
 
 #[entry]
 fn main() -> ! {
@@ -41,6 +41,12 @@ fn main() -> ! {
     
     loop {
 
+        lcd.write("testi").unwrap();
+
         delay.delay(500.millis());
+
+        lcd.set_command(Commands::SetCursorAtSecondLineFirstPosition).unwrap();
+        delay.delay(500.millis());
+        lcd.write("uusi viesti").unwrap();
     }
 }

@@ -3,46 +3,7 @@ use core::fmt;
 use embedded_hal::i2c::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
-
-pub enum Commands {
-    DisplayAndCursorOn = 0x0F,
-    ClearScreen = 0x01,
-    ReturnCursorAtStart = 0x02,
-    ShiftCursorLeft = 0x04,
-    ShiftCursorRight = 0x06,
-    ShiftDisplayRight = 0x05,
-    ShiftDisplayLeft = 0x07,
-    DisplayOnCursorBlinking = 0x0E,
-    ForceCursorAtStart = 0x80,
-    StartFromSecondLine = 0xC0,
-    Form5x7Matrix = 0x38,
-    SetCursorFirstLineThirdPosition = 0x83,
-    ActivateSecondLine = 0x3C,
-    DisplayAndCursorOff = 0x08,
-    SetCursorAtSecondLineFirstPosition = 0xC1,
-    DisplayOnWithNoVisibleCursor = 0x0C,
-    SetCursorAtSecondLineSecondPosition = 0xC2
-}
-
-pub enum Byte {
-    Target,
-    Data,
-}
-
-#[derive(Debug)]
-pub enum Pcf8574Error<E: fmt::Debug> {
-    I2cError(E),
-    NoDeviceFound,
-}
-
-impl<E: fmt::Debug> fmt::Display for Pcf8574Error<E> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Pcf8574Error::I2cError(e) => write!(f, "I2C error: {:?}", e),
-            Pcf8574Error::NoDeviceFound => write!(f, "No device found on the I2C bus"),
-        }
-    }
-}
+use crate::enums::{Commands, Pcf8574Error};
 
 // #[derive(Debug)]
 pub struct Pcf8574<I2C, E> {
@@ -63,7 +24,7 @@ where
         Ok(Self {
             i2c,
             address: 0x27,
-            delay: delay,
+            delay,
             _error: core::marker::PhantomData,
         })
     }
@@ -116,6 +77,24 @@ where
         }
         Ok(())
     }
+
+    ///function sets command for pcf8574. Command is given as an enum
+    pub fn set_command(&mut self, command: Commands) -> Result<(), Pcf8574Error<E>> {
+        self.send_command(command as u8).unwrap();
+        Ok(())
+    }
+
+    // pub fn clear_screen(&mut self) -> Result<(), Pcf8574Error<E>> {
+    //     self.send_command(Commands::ClearScreen as u8).unwrap();
+    //     self.delay.delay_millis(1000);
+    //     Ok(())
+    // }
+
+    // pub fn set_cursor_at_start(&mut self) -> Result<(), Pcf8574Error<E>> {
+    //     self.send_command(Commands::ForceCursorAtStart as u8).unwrap();
+    //     self.delay.delay_millis(5);
+    //     Ok(())
+    // }
 
     /// Alustaa LCD:n käyttöön
     pub fn initialize_lcd(&mut self) -> Result<(), Pcf8574Error<E>> {
