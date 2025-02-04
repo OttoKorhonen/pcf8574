@@ -1,4 +1,4 @@
 #![no_std]
 
-pub mod lcd16x2;
+pub mod pcf8574;
 pub mod enums;
