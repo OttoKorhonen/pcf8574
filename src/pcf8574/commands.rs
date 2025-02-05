@@ -1,3 +1,4 @@
+
 pub enum Commands {
     DisplayAndCursorOn = 0x0F,
     ClearScreen = 0x01,

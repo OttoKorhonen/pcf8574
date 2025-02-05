@@ -3,7 +3,7 @@ use core::fmt;
 use embedded_hal::i2c::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
-use crate::enums::{Commands, Pcf8574Error};
+use crate::pcf8574::{Commands, Pcf8574Error};
 
 // #[derive(Debug)]
 pub struct Pcf8574<I2C, E> {
