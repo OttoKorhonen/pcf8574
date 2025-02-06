@@ -80,8 +80,7 @@ where
     pub fn write<T>(&mut self, message: T) -> Result<(), Pcf8574Error<E>>
     where
         T: Display,
-    {
-        let message = message.to_string();
+    {   
         for ch in message.chars() {
             self.send_char(ch)?;
         }
