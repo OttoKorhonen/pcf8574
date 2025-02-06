@@ -1,10 +1,8 @@
 use crate::pcf8574::{Commands, Pcf8574Error};
-use core::error::Error;
-use core::fmt::{self, Display};
+use core::{error::Error, fmt::{Display,Write}};
 use embedded_hal::i2c::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
-use std::fmt::Display;
 
 
 // #[derive(Debug)]
@@ -81,7 +79,10 @@ where
     where
         T: Display,
     {   
-        for ch in message.chars() {
+        let mut buffer = heapless::String<32>();
+        write!(&mut buffer, "{}", message).map_err(|_| Pcf8574Error)?;
+
+        for ch in buffer.chars() {
             self.send_char(ch)?;
         }
         Ok(())
