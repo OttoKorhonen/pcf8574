@@ -7,7 +7,7 @@ use crate::pcf8574::{Commands, Pcf8574Error};
 
 // #[derive(Debug)]
 pub struct Pcf8574<I2C, E> {
-    i2c: I2C,
+    i2c: &I2C,
     address: u8,
     delay: Delay,
     _error: core::marker::PhantomData<E>,
@@ -20,7 +20,7 @@ where
     I2C: I2c<Error = E>,
     E: fmt::Debug,
 {
-    pub fn new(i2c: I2C, delay: Delay) -> Result<Self, Pcf8574Error<E>> {
+    pub fn new(i2c: &I2C, delay: Delay) -> Result<Self, Pcf8574Error<E>> {
         Ok(Self {
             i2c,
             address: 0x27,
