@@ -1,9 +1,11 @@
+use crate::pcf8574::{Commands, Pcf8574Error};
 use core::error::Error;
-use core::fmt;
+use core::fmt::{self, Display};
 use embedded_hal::i2c::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
-use crate::pcf8574::{Commands, Pcf8574Error};
+use std::fmt::Display;
+
 
 // #[derive(Debug)]
 pub struct Pcf8574<I2C, E> {
@@ -20,11 +22,11 @@ where
     I2C: I2c<Error = E>,
     E: fmt::Debug,
 {
-    pub fn new(i2c: &I2C, delay: Delay) -> Result<Self, Pcf8574Error<E>> {
+    pub fn new(i2c: &I2C) -> Result<Self, Pcf8574Error<E>> {
         Ok(Self {
             i2c,
             address: 0x27,
-            delay,
+            delay: Delay,
             _error: core::marker::PhantomData,
         })
     }
@@ -35,7 +37,7 @@ where
             if self.i2c.write(address, &[0]).is_ok() {
                 println!("Device found at address: 0x{:X}", address);
                 device_address = address;
-            }else{
+            } else {
                 println!("No device found!")
             }
         }
@@ -52,27 +54,35 @@ where
         Ok(())
     }
 
-    /// Lähettää "Enable"-pulssin PCF8574:n kautta LCD:lle
+    /// Send enable signal to the display via PCF8574
     fn set_enable(&mut self, data: u8) -> Result<(), Pcf8574Error<E>> {
-        self.i2c.write(self.address, &[data | 0x04]).map_err(Pcf8574Error::I2cError)?; // E=1
+        self.i2c
+            .write(self.address, &[data | 0x04])
+            .map_err(Pcf8574Error::I2cError)?; // E=1
         self.delay.delay_millis(5);
-        self.i2c.write(self.address, &[data & !0x04]).map_err(Pcf8574Error::I2cError)?; // E=0
+        self.i2c
+            .write(self.address, &[data & !0x04])
+            .map_err(Pcf8574Error::I2cError)?; // E=0
         Ok(())
     }
 
-    /// Lähettää komennon LCD:lle
-    pub fn send_command(&mut self, cmd: u8) -> Result<(), Pcf8574Error<E>> {
+    /// Send command to the LCD
+    fn send_command(&mut self, cmd: u8) -> Result<(), Pcf8574Error<E>> {
         self.send_byte(cmd, false)
     }
 
-    /// Lähettää merkin LCD:lle
-    pub fn send_char(&mut self, ch: char) -> Result<(), Pcf8574Error<E>> {
+    /// Send charat
+    fn send_char(&mut self, ch: char) -> Result<(), Pcf8574Error<E>> {
         self.send_byte(ch as u8, true)
     }
 
-    /// Kirjoittaa merkkijonon LCD:lle
-    pub fn write(&mut self, text: &str) -> Result<(), Pcf8574Error<E>> {
-        for ch in text.chars() {
+    /// Write message on the LCD
+    pub fn write<T>(&mut self, message: T) -> Result<(), Pcf8574Error<E>>
+    where
+        T: Display,
+    {
+        let message = message.to_string();
+        for ch in message.chars() {
             self.send_char(ch)?;
         }
         Ok(())
@@ -84,7 +94,7 @@ where
         Ok(())
     }
 
-    /// Alustaa LCD:n käyttöön
+    /// Initislize the display
     pub fn initialize_lcd(&mut self) -> Result<(), Pcf8574Error<E>> {
         self.send_command(0x03)?; // Init-sekvenssi
         self.send_command(0x03)?;
@@ -96,5 +106,4 @@ where
         self.send_command(0x01)?; // Clear screen
         Ok(())
     }
-
 }
