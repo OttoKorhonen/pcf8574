@@ -5,6 +5,7 @@ use core::fmt;
 pub enum Pcf8574Error<E: fmt::Debug> {
     I2cError(E),
     NoDeviceFound,
+    MessageFormatError
 }
 
 impl<E: fmt::Debug> fmt::Display for Pcf8574Error<E> {
@@ -12,6 +13,7 @@ impl<E: fmt::Debug> fmt::Display for Pcf8574Error<E> {
         match self {
             Pcf8574Error::I2cError(e) => write!(f, "I2C error: {:?}", e),
             Pcf8574Error::NoDeviceFound => write!(f, "No device found on the I2C bus"),
+            Pcf8574Error::MessageFormatError => write!(f, "Failed to write message")
         }
     }
 }

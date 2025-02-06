@@ -1,15 +1,18 @@
 use crate::pcf8574::{Commands, Pcf8574Error};
-use core::{error::Error, fmt::{Display,Write}};
+use core::fmt;
+use core::{
+    error::Error,
+    fmt::{Display, Write},
+};
 use embedded_hal::i2c::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
 
-
 // #[derive(Debug)]
-pub struct Pcf8574<I2C, E> {
-    i2c: &I2C,
+pub struct Pcf8574<'a, I2C, E> {
+    i2c: &'a I2C,
     address: u8,
-    delay: Delay,
+    delay: Delay::new(),
     _error: core::marker::PhantomData<E>,
 }
 
@@ -78,9 +81,9 @@ where
     pub fn write<T>(&mut self, message: T) -> Result<(), Pcf8574Error<E>>
     where
         T: Display,
-    {   
-        let mut buffer = heapless::String<32>();
-        write!(&mut buffer, "{}", message).map_err(|_| Pcf8574Error)?;
+    {
+        let mut buffer = heapless::String::<32>();
+        write!(&mut buffer, "{}", message).map_err(|_| Pcf8574Error::MessageFormatError)?;
 
         for ch in buffer.chars() {
             self.send_char(ch)?;
