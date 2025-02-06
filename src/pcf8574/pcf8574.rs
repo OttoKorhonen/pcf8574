@@ -7,6 +7,7 @@ use core::{
 use embedded_hal::i2c::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
+use heapless::String;
 
 // #[derive(Debug)]
 pub struct Pcf8574<'a, I2C, E> {

@@ -21,6 +21,7 @@ esp-hal = { version = "0.22.0", default-features = false }
 esp-println = { version = "0.12.0", default-features = false }
 log = "0.4.21"
 critical-section = "1.2.0"
+heapless = "0.8.0"
 
 [profile.dev]
 opt-level = "s"
