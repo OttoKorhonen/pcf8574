@@ -1,7 +1,15 @@
 [package]
-name = "lcd_display"
+name = "pcf8574"
 version = "0.1.0"
 edition = "2021"
+
+[bin]
+name = "pcf8574"
+path = "src/main.rs"
+
+[lib]
+name = "pcf8574"
+path = "src/lib.rs"
 
 [dependencies]
 esp-backtrace = { version = "0.14.2", features = [
