@@ -13,7 +13,7 @@ use heapless::String;
 pub struct Pcf8574<'a, I2C, E> {
     i2c: &'a I2C,
     address: u8,
-    delay: Delay::new(),
+    delay: Delay,
     _error: core::marker::PhantomData<E>,
 }
 
@@ -28,7 +28,7 @@ where
         Ok(Self {
             i2c,
             address: 0x27,
-            delay: Delay,
+            delay: Delay::new(),
             _error: core::marker::PhantomData,
         })
     }
@@ -83,7 +83,7 @@ where
     where
         T: Display,
     {
-        let mut buffer = heapless::String::<32>();
+        let mut buffer = heapless::String::<32>::new();
         write!(&mut buffer, "{}", message).map_err(|_| Pcf8574Error::MessageFormatError)?;
 
         for ch in buffer.chars() {
