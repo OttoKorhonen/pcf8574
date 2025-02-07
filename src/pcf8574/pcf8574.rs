@@ -8,6 +8,7 @@ use embedded_hal::i2c::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
 use heapless::String;
+use core::borrow::BorrowMut;
 
 pub struct Pcf8574<I2C, E> {
     i2c: I2C,
@@ -18,7 +19,7 @@ pub struct Pcf8574<I2C, E> {
 
 impl<E: fmt::Debug> Error for Pcf8574Error<E> {}
 
-impl<I2C: I2c, E> Pcf8574<'_, I2C, E>
+impl<I2C: I2c, E> Pcf8574<I2C, E>
 where
     I2C: BorrowMut<I2C>,
     I2C: I2c<Error = E>,
