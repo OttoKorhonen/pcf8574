@@ -9,9 +9,8 @@ use esp_hal::delay::Delay;
 use esp_println::println;
 use heapless::String;
 
-// #[derive(Debug)]
-pub struct Pcf8574<'a, I2C, E> {
-    i2c: &'a I2C,
+pub struct Pcf8574<I2C, E> {
+    i2c: I2C,
     address: u8,
     delay: Delay,
     _error: core::marker::PhantomData<E>,
@@ -21,10 +20,11 @@ impl<E: fmt::Debug> Error for Pcf8574Error<E> {}
 
 impl<I2C: I2c, E> Pcf8574<'_, I2C, E>
 where
+    I2C: BorrowMut<I2C>,
     I2C: I2c<Error = E>,
     E: fmt::Debug,
 {
-    pub fn new(i2c: &I2C) -> Result<Self, Pcf8574Error<E>> {
+    pub fn new(i2c: I2C) -> Result<Self, Pcf8574Error<E>> {
         Ok(Self {
             i2c,
             address: 0x27,
@@ -33,12 +33,14 @@ where
         })
     }
 
+    ///function searches for addresses and sets found address as the device address
     pub fn search_for_address(&mut self) {
-        let mut device_address = 0;
+        let mut device_address = 0x27;
         for address in 0x00..0x78 {
             if self.i2c.write(address, &[0]).is_ok() {
                 println!("Device found at address: 0x{:X}", address);
                 device_address = address;
+                break;
             } else {
                 println!("No device found!")
             }
