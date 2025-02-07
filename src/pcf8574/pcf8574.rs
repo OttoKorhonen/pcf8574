@@ -4,11 +4,12 @@ use core::{
     error::Error,
     fmt::{Display, Write},
 };
-use embedded_hal::i2c::I2c;
+use esp_hal::i2c::master::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
 use heapless::String;
 use core::borrow::BorrowMut;
+use embedded_hal::i2c::I2c as HalI2c;
 
 pub struct Pcf8574<I2C, E> {
     i2c: I2C,
@@ -21,8 +22,7 @@ impl<E: fmt::Debug> Error for Pcf8574Error<E> {}
 
 impl<I2C: I2c, E> Pcf8574<I2C, E>
 where
-    I2C: BorrowMut<I2C>,
-    I2C: I2c<Error = E>,
+I2C: HalI2c<Error = E> ,
     E: fmt::Debug,
 {
     pub fn new(i2c: I2C) -> Result<Self, Pcf8574Error<E>> {
@@ -38,7 +38,7 @@ where
     pub fn search_for_address(&mut self) {
         let mut device_address = 0x27;
         for address in 0x00..0x78 {
-            if self.i2c.write(address, &[0]).is_ok() {
+            if self.i2c.borrow_mut().write(address, &[0]).is_ok() {
                 println!("Device found at address: 0x{:X}", address);
                 device_address = address;
                 break;
@@ -61,11 +61,11 @@ where
 
     /// Send enable signal to the display via PCF8574
     fn set_enable(&mut self, data: u8) -> Result<(), Pcf8574Error<E>> {
-        self.i2c
+        self.i2c.borrow_mut()
             .write(self.address, &[data | 0x04])
             .map_err(Pcf8574Error::I2cError)?; // E=1
         self.delay.delay_millis(5);
-        self.i2c
+        self.i2c.borrow_mut()
             .write(self.address, &[data & !0x04])
             .map_err(Pcf8574Error::I2cError)?; // E=0
         Ok(())
