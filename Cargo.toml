@@ -22,8 +22,6 @@ log = "0.4.21"
 critical-section = "1.2.0"
 heapless = "0.8.0"
 
-embedded-hal-bus = "0.1"
-embedded-hal = "1.0.0"
 
 [profile.dev]
 opt-level = "s"

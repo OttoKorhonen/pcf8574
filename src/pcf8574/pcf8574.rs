@@ -9,7 +9,7 @@ use esp_hal::delay::Delay;
 use esp_println::println;
 use heapless::String;
 use core::borrow::BorrowMut;
-use embedded_hal::i2c::I2c as HalI2c;
+// use embedded_hal::i2c::I2c as HalI2c;
 
 pub struct Pcf8574<I2C, E> {
     i2c: I2C,
@@ -25,7 +25,7 @@ where
 I2C: HalI2c<Error = E> ,
     E: fmt::Debug,
 {
-    pub fn new(i2c: I2C) -> Result<Self, Pcf8574Error<E>> {
+    pub fn new(i2c: &I2C) -> Result<Self, Pcf8574Error<E>> {
         Ok(Self {
             i2c,
             address: 0x27,
