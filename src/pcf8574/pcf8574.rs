@@ -9,7 +9,7 @@ use esp_hal::delay::Delay;
 use esp_println::println;
 use heapless::String;
 use core::borrow::BorrowMut;
-// use embedded_hal::i2c::I2c as HalI2c;
+use embedded_hal::i2c::I2c as HalI2c;
 
 pub struct Pcf8574<I2C, E> {
     i2c: I2C,
