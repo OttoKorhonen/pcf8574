@@ -25,7 +25,7 @@ where
 I2C: HalI2c<Error = E> ,
     E: fmt::Debug,
 {
-    pub fn new(i2c: &I2C) -> Result<Self, Pcf8574Error<E>> {
+    pub fn new(i2c: I2C) -> Result<Self, Pcf8574Error<E>> {
         Ok(Self {
             i2c,
             address: 0x27,
