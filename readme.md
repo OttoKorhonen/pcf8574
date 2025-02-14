@@ -9,3 +9,30 @@ LCD display
 
 PCF8574
 > https://www.ti.com/lit/ds/symlink/pcf8574.pdf?ts=1627006546204
+
+
+## How to run/build
+
+<b>To run:</b>
+
+> cargo run
+
+<b>Build:</b>
+
+ESP32:
+> cargo build --release --features esp32
+
+ESP32S2:
+>cargo build --release --features esp32s2
+
+ESP32S3:
+> cargo build --release --features esp32s3
+
+ESP32C3:
+> cargo build --release --features esp32c3
+
+Raspberry Pi Pico:
+> cargo build --release --features rp-pico
+
+Raspberry Pi 4/5 Linux:
+> cargo build --release --features rpi
