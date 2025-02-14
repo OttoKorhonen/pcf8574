@@ -10,29 +10,23 @@ LCD display
 PCF8574
 > https://www.ti.com/lit/ds/symlink/pcf8574.pdf?ts=1627006546204
 
+## Build instructions
 
-## How to run/build
+### ESP32-based boards
+- cargo build --release --features esp32
+- cargo build --release --features esp32s2
+- cargo build --release --features esp32s3
+- cargo build --release --features esp32c3
 
-<b>To run:</b>
+### Raspberry Pi
+- cargo build --release --features rp-pico  
+- cargo build --release --features rpi 
 
-> cargo run
+## Supported platforms
 
-<b>Build:</b>
-
-ESP32:
-> cargo build --release --features esp32
-
-ESP32S2:
->cargo build --release --features esp32s2
-
-ESP32S3:
-> cargo build --release --features esp32s3
-
-ESP32C3:
-> cargo build --release --features esp32c3
-
-Raspberry Pi Pico:
-> cargo build --release --features rp-pico
-
-Raspberry Pi 4/5 Linux:
-> cargo build --release --features rpi
+| Platform           | Status      |  
+|--------------------|------------|  
+| ESP32C3           | ✅ Tested  |  
+| ESP32 / ESP32S2 / ESP32S3 | ⚠ Not tested |  
+| Raspberry Pi Pico | ⚠ Not tested |  
+| Raspberry Pi 4/5  | ⚠ Not tested |
