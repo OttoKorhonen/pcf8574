@@ -4,7 +4,7 @@ use core::{
     error::Error,
     fmt::{Display, Write},
 };
-use esp_hal::i2c::master::I2c;
+// use esp_hal::i2c::master::I2c;
 use esp_hal::delay::Delay;
 use esp_println::println;
 use heapless::String;
