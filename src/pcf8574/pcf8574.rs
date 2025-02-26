@@ -5,14 +5,14 @@ use core::{
     error::Error,
     fmt::{Display, Write},
 };
-use embedded_hal::{delay::DelayNs, i2c::I2c as HalI2c};
+use embedded_hal:: i2c::I2c as HalI2c;
 use heapless::String;
-use embedded_hal::spi::Operation::DelayNs  as OtherDelayNs;
+use embedded_hal::spi::Operation::DelayNs;
 
 pub struct Pcf8574<'a, I2C, E> {
     i2c: I2C,
     address: u8,
-    delay: &'a dyn DelayNs,
+    delay: &'a mut dyn DelayNs,
     _error: core::marker::PhantomData<E>,
 }
 
@@ -27,7 +27,7 @@ where
         Ok(Self {
             i2c,
             address,
-            delay: DelayNs,
+            delay: &mut DelayNs,
             _error: core::marker::PhantomData,
         })
     }
