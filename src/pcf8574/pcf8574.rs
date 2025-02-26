@@ -17,7 +17,7 @@ pub struct Pcf8574<'a, I2C, E, D> {
 
 impl<E: fmt::Debug> Error for Pcf8574Error<E> {}
 
-impl<I2C, E, D> Pcf8574<'a, I2C, E, D>
+impl<'a, I2C, E, D> Pcf8574<'a, I2C, E, D>
 where
     I2C: HalI2c<Error = E>,
     E: fmt::Debug,
