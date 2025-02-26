@@ -7,7 +7,7 @@ use core::{
 };
 use embedded_hal::{delay::DelayNs, i2c::I2c as HalI2c};
 use heapless::String;
-use embedded_hal::spi::Operation::DelayNs;
+use embedded_hal::spi::Operation::DelayNs  as OtherDelayNs;
 
 pub struct Pcf8574<'a, I2C, E> {
     i2c: I2C,
@@ -18,7 +18,7 @@ pub struct Pcf8574<'a, I2C, E> {
 
 impl<E: fmt::Debug> Error for Pcf8574Error<E> {}
 
-impl<I2C, E> Pcf8574<I2C, E>
+impl<I2C, E> Pcf8574<'_, I2C, E>
 where
     I2C: HalI2c<Error = E>,
     E: fmt::Debug,
