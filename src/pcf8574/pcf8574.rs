@@ -11,7 +11,7 @@ use heapless::{String, Vec};
 pub struct Pcf8574<I2C, E> {
     i2c: I2C,
     address: u8,
-    delay: dyn DelayNs,
+    delay: &dyn DelayNs,
     _error: core::marker::PhantomData<E>,
 }
 
