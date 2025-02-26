@@ -8,21 +8,22 @@ use core::{
 use embedded_hal::{delay::DelayNs, i2c::I2c as HalI2c};
 use heapless::String;
 
-pub struct Pcf8574<'a, I2C, E> {
+pub struct Pcf8574<'a, I2C, E, D> {
     i2c: I2C,
     address: u8,
-    delay: &'a mut dyn DelayNs,
+    delay: D,
     _error: core::marker::PhantomData<E>,
 }
 
 impl<E: fmt::Debug> Error for Pcf8574Error<E> {}
 
-impl<I2C, E> Pcf8574<'_, I2C, E>
+impl<I2C, E, D> Pcf8574<'a, I2C, E, D>
 where
     I2C: HalI2c<Error = E>,
     E: fmt::Debug,
+    D: DelayNs
 {
-    pub fn new(i2c: I2C, address: u8, delay: &'_ mut dyn DelayNs) -> Result<Self, Pcf8574Error<E>> {
+    pub fn new(i2c: I2C, address: u8, delay: D) -> Result<Self, Pcf8574Error<E>> {
         Ok(Self {
             i2c,
             address,
