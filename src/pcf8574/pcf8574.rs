@@ -6,12 +6,13 @@ use core::{
     fmt::{Display, Write},
 };
 use embedded_hal::{delay::DelayNs, i2c::I2c as HalI2c};
-use heapless::{String, Vec};
+use heapless::String;
+use embedded_hal::spi::Operation::DelayNs;
 
-pub struct Pcf8574<I2C, E> {
+pub struct Pcf8574<'a, I2C, E> {
     i2c: I2C,
     address: u8,
-    delay: &dyn DelayNs,
+    delay: &'a dyn DelayNs,
     _error: core::marker::PhantomData<E>,
 }
 
