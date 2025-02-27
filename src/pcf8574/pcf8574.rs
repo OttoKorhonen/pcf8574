@@ -59,7 +59,7 @@ where
     }
 
     /// Send command to the LCD
-    pub fn set_command(&mut self, cmd: u8) -> Result<(), Pcf8574Error<E>> {
+    fn send_command(&mut self, cmd: u8) -> Result<(), Pcf8574Error<E>> {
         self.send_byte(cmd, false)
     }
 
@@ -83,21 +83,21 @@ where
     }
 
     ///function sets command for pcf8574. Command is given as an enum
-    fn set_command(&mut self, command: Commands) -> Result<(), Pcf8574Error<E>> {
-        self.set_command(command as u8).unwrap();
+    pub fn set_command(&mut self, command: Commands) -> Result<(), Pcf8574Error<E>> {
+        self.send_command(command as u8).unwrap();
         Ok(())
     }
 
     /// Initislize the display
     pub fn initialize_lcd(&mut self) -> Result<(), Pcf8574Error<E>> {
-        self.set_command(0x03)?; // Init-sekvenssi
-        self.set_command(0x03)?;
-        self.set_command(0x03)?;
-        self.set_command(0x02)?; // 4-bit mode
-        self.set_command(0x28)?; // Function set: 4-bit, 2 lines, 5x8 font
-        self.set_command(0x0C)?; // Display on, cursor off
-        self.set_command(0x06)?; // Entry mode set
-        self.set_command(0x01)?; // Clear screen
+        self.send_command(0x03)?; // Init-sekvenssi
+        self.send_command(0x03)?;
+        self.send_command(0x03)?;
+        self.send_command(0x02)?; // 4-bit mode
+        self.send_command(0x28)?; // Function set: 4-bit, 2 lines, 5x8 font
+        self.send_command(0x0C)?; // Display on, cursor off
+        self.send_command(0x06)?; // Entry mode set
+        self.send_command(0x01)?; // Clear screen
         Ok(())
     }
 }
