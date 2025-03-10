@@ -12,7 +12,7 @@ default = []
 esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32"]
 esp32s2 = ["esp-hal/esp32s2", "esp-backtrace/esp32s2", "esp-println/esp32s2"]
 esp32s3 = ["esp-hal/esp32s3", "esp-backtrace/esp32s3", "esp-println/esp32s3"]
-esp32c3 = ["esp-hal/esp32c3", "esp-backtrace/esp32c3", "esp-println/esp32c3"]
+esp32c3 = ["esp-hal/esp32c3", "esp-backtrace/esp32c3", "esp-println/esp32c3", "esp-println/uart"]
 
 # Raspberry Pi Pico
 rp-pico = ["rp-hal"]
