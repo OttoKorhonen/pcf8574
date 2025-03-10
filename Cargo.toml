@@ -8,7 +8,8 @@ name = "pcf8574"
 path = "src/lib.rs"
 
 [features]
-default = []
+default = ["rp-linux"]  # Käytetään Raspberry Pi -ympäristöä oletuksena
+
 esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32"]
 esp32s2 = ["esp-hal/esp32s2", "esp-backtrace/esp32s2", "esp-println/esp32s2"]
 esp32s3 = ["esp-hal/esp32s3", "esp-backtrace/esp32s3", "esp-println/esp32s3"]
@@ -16,8 +17,9 @@ esp32c3 = ["esp-hal/esp32c3", "esp-backtrace/esp32c3", "esp-println/esp32c3", "e
 
 # Raspberry Pi Pico
 rp-pico = ["rp-hal"]
-# Raspberry Pi 4/5 Linux GPIO
-rp-linux = ["rppal"]
+
+# Raspberry Pi 3/4/5 Linux GPIO
+rp-linux = ["rppal", "linux-embedded-hal"]
 
 [dependencies]
 esp-backtrace = { version = "0.14.2", features = ["exception-handler", "panic-handler", "println"] }
@@ -28,8 +30,9 @@ critical-section = "1.2.0"
 heapless = "0.8.0"
 
 embedded-hal = "1.0.0"
-rp-hal = { version = "0.0.2", optional = true }        
+rp-hal = { version = "0.0.2", optional = true }
 rppal = { version = "0.14", optional = true }
+linux-embedded-hal = { version = "0.3", optional = true }
 
 [profile.dev]
 opt-level = "s"
