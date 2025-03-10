@@ -8,7 +8,7 @@ name = "pcf8574"
 path = "src/lib.rs"
 
 [features]
-default = ["esp32c3"]
+default = []
 esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32"]
 esp32s2 = ["esp-hal/esp32s2", "esp-backtrace/esp32s2", "esp-println/esp32s2"]
 esp32s3 = ["esp-hal/esp32s3", "esp-backtrace/esp32s3", "esp-println/esp32s3"]
