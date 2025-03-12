@@ -5,12 +5,12 @@ use core::{
     error::Error,
     fmt::{Display, Write},
 };
-use embedded_hal::{delay::DelayNs, i2c::I2c as HalI2c};
-use heapless::String;
+use embedded_hal::{delay::DelayNs, i2c::SevenBitAddress};
+use heapless;
 
 pub struct Pcf8574<I2C, E, D> {
     i2c: I2C,
-    address: u8,
+    address: SevenBitAddress,
     delay: D,
     _error: core::marker::PhantomData<E>,
 }
@@ -19,7 +19,7 @@ impl<E: fmt::Debug> Error for Pcf8574Error<E> {}
 
 impl<I2C, E, D> Pcf8574<I2C, E, D>
 where
-    I2C: HalI2c<Error = E>,
+    I2C:  embedded_hal::i2c::I2c<Error = E>,
     E: fmt::Debug,
     D: DelayNs
 {
