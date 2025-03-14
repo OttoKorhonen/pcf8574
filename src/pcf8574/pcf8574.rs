@@ -85,7 +85,7 @@ where
         write!(&mut buffer, "{}", message).map_err(|_| Pcf8574Error::MessageFormatError)?;
 
         let message_bytes = buffer.as_bytes();
-        self.send_byte(message_bytes, false).unwrap();
+        self.send_byte(message_bytes, true).unwrap();
 
         Ok(())
     }
