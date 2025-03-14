@@ -32,15 +32,15 @@ where
         })
     }
 
-    fn send_byte(&mut self, byte: u8, rs: bool) -> Result<(), Pcf8574Error<E>> {
-        let rs_bit = if rs { 0x01 } else { 0x00 }; // RS = 1 data, RS = 0 komento
-        let high_nibble = (byte & 0xF0) | rs_bit | 0x08; // 0x08 pitää taustavalon päällä
-        let low_nibble = ((byte << 4) & 0xF0) | rs_bit | 0x08;
+    // fn send_byte(&mut self, byte: u8, rs: bool) -> Result<(), Pcf8574Error<E>> {
+    //     let rs_bit = if rs { 0x01 } else { 0x00 }; // RS = 1 data, RS = 0 command
+    //     let high_nibble = (byte & 0xF0) | rs_bit | 0x08; // 0x08 keeps backlight on
+    //     let low_nibble = ((byte << 4) & 0xF0) | rs_bit | 0x08;
 
-        self.set_enable(high_nibble)?;
-        self.set_enable(low_nibble)?;
-        Ok(())
-    }
+    //     self.set_enable(high_nibble)?;
+    //     self.set_enable(low_nibble)?;
+    //     Ok(())
+    // }
 
     /// Send enable signal to the display via PCF8574
     fn set_enable(&mut self, data: u8) -> Result<(), Pcf8574Error<E>> {
@@ -58,13 +58,22 @@ where
         Ok(())
     }
 
-    /// Send command to the LCD
-    fn send_command(&mut self, cmd: u8) -> Result<(), Pcf8574Error<E>> {
-        self.send_byte(cmd, false)
+    fn send_byte(&mut self, byte_array: &[u8], rs: bool) -> Result<(), Pcf8574Error<E>> {
+        let rs_bit = if rs { 0x01 } else { 0x00 }; // RS = 1 data, RS = 0 command
+
+        for byte in byte_array {
+            let high_nibble = (byte & 0xF0) | rs_bit | 0x08; // 0x08 keeps backlight on
+            let low_nibble = ((byte << 4) & 0xF0) | rs_bit | 0x08;
+    
+            self.set_enable(high_nibble)?;
+            self.set_enable(low_nibble)?;
+        }
+        
+        Ok(())
     }
 
-    fn send_char(&mut self, ch: char) -> Result<(), Pcf8574Error<E>> {
-        self.send_byte(ch as u8, true)
+    fn send_command(&mut self, cmd: u8) -> Result<(), Pcf8574Error<E>> {
+        self.send_byte(&[cmd], false)
     }
 
     /// Write message on the LCD
@@ -75,12 +84,35 @@ where
         let mut buffer = heapless::String::<32>::new();
         write!(&mut buffer, "{}", message).map_err(|_| Pcf8574Error::MessageFormatError)?;
 
-        for ch in buffer.chars() {
-            self.send_char(ch)?;
-        }
+        let message_bytes = buffer.as_bytes();
+        self.send_byte(message_bytes, false).unwrap();
 
         Ok(())
     }
+
+    /// Send command to the LCD
+    // fn send_command(&mut self, cmd: u8) -> Result<(), Pcf8574Error<E>> {
+    //     self.send_byte(cmd, false)
+    // }
+
+    // fn send_char(&mut self, ch: char) -> Result<(), Pcf8574Error<E>> {
+    //     self.send_byte(ch as u8, true)
+    // }
+
+    // /// Write message on the LCD
+    // pub fn write<T>(&mut self, message: T) -> Result<(), Pcf8574Error<E>>
+    // where
+    //     T: Display,
+    // {
+    //     let mut buffer = heapless::String::<32>::new();
+    //     write!(&mut buffer, "{}", message).map_err(|_| Pcf8574Error::MessageFormatError)?;
+
+    //     for ch in buffer.chars() {
+    //         self.send_char(ch)?;
+    //     }
+
+    //     Ok(())
+    // }
 
     ///function sets command for pcf8574. Command is given as an enum
     pub fn set_command(&mut self, command: Commands) -> Result<(), Pcf8574Error<E>> {

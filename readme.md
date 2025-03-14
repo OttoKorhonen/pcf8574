@@ -20,7 +20,7 @@ PCF8574
 
 ### Raspberry Pi
 - cargo build --release --features rp-pico  
-- cargo build --release --features rpi 
+- cargo build --release --features rpi-linux
 
 ## Supported platforms
 
@@ -29,4 +29,4 @@ PCF8574
 | ESP32C3           | ✅ Tested  |  
 | ESP32 / ESP32S2 / ESP32S3 | ⚠ Not tested |  
 | Raspberry Pi Pico | ⚠ Not tested |  
-| Raspberry Pi 4/5  | ⚠ Not tested |
+| Raspberry Pi 3 B  | ✅ Tested |
